@@ -1,0 +1,22 @@
+{{/* gotype: entgo.io/ent/entc/gen.Graph */}}
+{{ define "uid" }}
+    {{ $pkg := base $.Config.Package }}
+    {{ template "header" $ }}
+    // prefixMap maps uid prefixes to table names.
+    var prefixMap = map[string]string{
+    {{- range $node := $.Nodes }}
+        {{- if $annotation := $node.Annotations.UID }}
+            "{{ $annotation.Prefix }}": {{ $node.Package }}.Table,
+        {{- end }}
+    {{- end }}
+    }
+    // ResolveNodeType returns the node type for the given uid.
+    func ResolveNodeType(ctx context.Context, id uid.ID) (string, error) {
+        prefix := id.Prefix()
+        typ := prefixMap[prefix]
+        if typ == "" {
+            return "", fmt.Errorf("IDToType: could not map prefix %q to a type", prefix)
+        }
+        return typ, nil
+    }
+{{ end }}
