@@ -1,4 +1,4 @@
-package mixin
+package uidmixin
 
 import (
 	"entgo.io/ent"
