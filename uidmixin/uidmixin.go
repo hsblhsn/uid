@@ -1,11 +1,11 @@
 package uidmixin
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
-
 	"github.com/hsblhsn/uid"
 )
 
@@ -31,7 +31,10 @@ func (m UID) Fields() []ent.Field {
 			DefaultFunc(func() uid.ID {
 				id := uid.MustNew(m.prefix)
 				return id
-			}),
+			}).
+			Annotations(
+				entgql.OrderField("ID"),
+			),
 	}
 }
 
